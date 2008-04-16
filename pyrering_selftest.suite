@@ -1,0 +1,3 @@
+# PyreRing unit test suite file.
+*_test.py
+lib/*_test.py
