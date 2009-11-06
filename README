@@ -1,8 +1,13 @@
 PyreRing README
+                                                Last Update: Mon Apr 21 PDT 2008
 
-PyreRing is an test automation test runner. This program is protected under 
+PyreRing is an test automation test runner. This program is protected under
 the Apache License, version 2.0. PyreRing is written in Python, and is Python
 2.4 compatible.
+
+This file contains  minimal documentation. Documentation is kept online at
+http://code.google.com. Please refer to the Usage Guide or Developer Guide for
+up-to-date documentation.
 
 For help using or developing on PyreRing:
 
@@ -13,6 +18,11 @@ Developer Guide:    http://code.google.com/p/pyrering/wiki/PyreRingDev
 Download PyreRing:  http://code.google.com/p/pyrering/downloads/list
 Checkout Source:
   svn checkout http://pyrering.googlecode.com/svn/trunk/ pyrering-read-only
+  svn checkout https://pyrering.googlecode.com/svn/trunk/ pyrering --username \
+    <username>
+Checkout Docs:
+  svn checkout http://pyrering.googlecode.com/svn/wiki/ wiki --username \
+    <username>
 Issues/Enhancement: http://code.google.com/p/pyrering/issues/list
 
 Discussion Groups:
@@ -20,8 +30,49 @@ Discussion Groups:
   Discussion:    http://groups.google.com/group/pyrering-discuss
   Development:   http://groups.google.com/group/pyrering-dev
 
-Directory Layout:
-README: this file
-COPYING: Apache License Agreement
-pyrering.py : entry point to start PyreRing
+Directory and Files Layout:
+===========================
+__init__.py
+README
+COPYING
+pyrering.py
+pyrering_selftest.sh
+pyrering_selftest.suite
+pyrering_test.py
+release_info.py
 
+conf/pyrering.conf (This file is created the first time PyreRing is run.)
+
+lib/__init__.py
+lib/baserunner.py
+lib/baserunner_test.py
+lib/common_util.py
+lib/constants.py
+lib/emailmessage.py
+lib/filesystem_handler.py
+lib/filesystem_handler_test.py
+lib/filesystemhandlerextend.py
+lib/mock_emailmessage.py
+lib/mock_filesystem_handler.py
+lib/mock_filesystemhandlerextend.py
+lib/mock_pyreringframeworkadaptor.py
+lib/mock_reporter.py
+lib/mock_scanscripts.py
+lib/pyreringconfig.py
+lib/pyreringconfig_test.py
+lib/pyreringutil.py
+lib/pyreringutil_test.py
+lib/reporter_txt.py
+lib/reporter_txt_test.py
+lib/scanscripts.py
+lib/scanscripts_test.py
+
+reports/* (This directory is the default for report logs, and is created when 
+           PyreRing is run the first time.)
+
+test/SETUP.py
+test/outputlargetxt.py
+test/quicktest.suite
+test/raise_keyboardinterrupt.py
+test/test1_echo.sh
+================================
