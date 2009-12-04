@@ -52,6 +52,7 @@ class BaseRunnerTest(unittest.TestCase):
          'email_recipients': os.getenv('LOGNAME'),
          'host_name': 'test.host',
          'log_file': 'pyrering.log',
+         'file_errors': False,
          'project_name': 'pyrering_unittest',
          'root_dir': root_dir,
          'sendmail': False,
@@ -107,7 +108,7 @@ class BaseRunnerTest(unittest.TestCase):
     self.one_config['TEST_SCRIPT'] = 'sleep 3'
     # set the mock scanscript to return this thing.
     self.scanner.SetConfig([self.one_config])
-    
+
     # now run the test and return should be expected.
     result = self.runner.Run(['testOneCommand'], False)
     self.assertEqual(result, 0)
@@ -122,7 +123,7 @@ class BaseRunnerTest(unittest.TestCase):
     self.assertEqual(result, 0)
     self.assertEqual(self.runner.passed, 1)
     #TODO(mwu): need to check the log file has this hello line
-    
+
   def testEchoToSTDERRCommand(self):
     """A simple command has output redirect to stderr."""
     self.one_config['TEST_SCRIPT'] = 'echo testEchoToSTDERRCommand >&2'
@@ -150,7 +151,7 @@ class BaseRunnerTest(unittest.TestCase):
     config2 = pyreringutil.PRConfigParser().Default()
     config2['TEST_SCRIPT'] = 'echo testRunScripts2'
     self.scanner.SetConfig([self.one_config, config2])
-    
+
     result = self.runner.Run(['testRunScripts'], False)
     self.assertEqual(result, 0)
     self.assertEqual(self.runner.passed, 2)
@@ -231,7 +232,7 @@ class BaseRunnerTest(unittest.TestCase):
 
   def testOutputLargeMessage(self):
     """Test a test can have large screen output.
-    
+
     As default the stdout only has a 4k buffer limit, so the code should clean
     up the buffer while running the test, otherwise the writing to buffer will
     be blocked when the buffer is full.

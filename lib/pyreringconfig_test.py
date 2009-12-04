@@ -86,6 +86,7 @@ class PyreRingConfigTest(unittest.TestCase):
     self.assertEqual(self.settings.settings['email_recipients'],
                      getpass.getuser())
     self.assertEqual(self.settings.settings['log_file'], 'pyrering.log')
+    self.assertEqual(self.settings.settings['file_errors'])
     self.assertFalse(self.settings.settings['reset'])
     self.assertEqual(self.settings.settings['runner'], 'baserunner')
     self.assertEqual(self.settings.settings['FATAL_STRING'], '')

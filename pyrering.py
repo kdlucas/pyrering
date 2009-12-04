@@ -31,6 +31,7 @@ Usage:
   --conf_file: point the path to the config file. The default is
     ./conf/pyrering.conf. PyreRing will create this file if it doesn't exist.
   --email_recipients: the email recipients, separated by commas
+  --file_errors: send failing testcase errors and output to a separate file.
   --log_file: the name of the log file. It should not include the path.
     The default value is pyrering.log and it will always be found at
     <report_dir>/<host_name>_<log_file>.
@@ -116,6 +117,11 @@ def ParseArgs():
   parser.add_option('--project_name',
                     help='name of your project',
                     dest='project_name')
+  parser.add_option('--file_errors',
+                    help='store stderr/stdout to file on test errors',
+                    action='store_true',
+                    default=False,
+                    dest='file_errors')
   parser.add_option('--sendmail',
                     help='send email report or not',
                     action='store_true',
@@ -191,6 +197,8 @@ def main(args):
     user_args['sendmail'] = True
   if options.nosendmail:
     user_args['sendmail'] = False
+  if options.file_errors:
+    user_args['file_errors'] = True
 
 
   pyreringconfig.Init(pyrering_root_path, user_args)

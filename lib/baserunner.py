@@ -76,10 +76,10 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
                filesystem=filesystemhandlerextend.FileSystemHandlerExtend(),
                reporter=None):
     """Init the BaseRunner with a name.
-    
+
     It should get a name from the init call of this instance. The name is not
     used currently.
-    
+
     Args:
       name: a unique name to identify this instance, the default is /bin/sh.
       scanner: an initialized scanner with source_dir.
@@ -106,6 +106,9 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
     self.reporter = reporter or (
         reporter_txt.TxtReporter(global_settings['project_name']))
 
+    # Set the file_errors boolean.
+    self.file_errors = global_settings['file_errors']
+
     self.failed = 0
     self.passed = 0
     self.timeout = 0
@@ -125,7 +128,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
                            '.txt'])
     report_file = os.path.join(global_settings['report_dir'], result_name)
     self.reporter.SetReportFile(report_file)
-    
+
   @DEBUG
   def CleanUp(self):
     """This is used to clean up its own.
@@ -137,12 +140,12 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
 
   def _RunSuites(self, suites):
     """Run a list of suites.
-    
+
     It runs suites given. If any test in SETUP_SUITE fails, it will return 1
     to mark it is a setup failure. Otherwise, return 0 for all.
     Args:
       suites: <list> names of test suite/cases.
-      
+
     Returns:
       int: 1 if a setup test case failed; otherwise 0
     """
@@ -165,7 +168,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
 
   def _AddUserInfo(self):
     """Add user specific information to report file.
-    
+
     It will try to find a pre-defined header_file and attach it to the report
     file header part.
     """
@@ -250,7 +253,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
     The suite list should be run and reports will be generated under report_dir
     directory as set in the global settings. Also email should go out if
     email_flag is set to True.
-    
+
     Args:
       suite_list: a list of suites/tests understandable to the framework.
       email_flag: a boolean value to indicate if an email is needed for the
@@ -291,7 +294,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
       title = '%s is GREEN' % title
     body = 'Here is the report:\n'
     content_file = self.reporter.GetReportFile()
-    
+
     self.email_message.SetMessage(from_address,
                                   to_address,
                                   title,
@@ -381,7 +384,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
 
   def _CheckAndReportResult(self, one_script_dict, result):
     """Check and report test result to reporter.
-    
+
     After run finished for the test, send the result to reporter and return a
     decision if the test passed or not.
     Here in Unix shell, the exit code is stored in a Byte which is 8 bits and
@@ -396,11 +399,11 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
     right way to do it. mode 256 will have no effect on positive values under
     256 which is desired. This is true on 32 bit system, not verified on 64 bit
     system yet.
-    
+
     Args:
       one_script_dict: <dict> test case dictionary.
       result: None/int based on the test return.
-      
+
     Returns:
       Boolean: True if the test is not a pass.
     """
@@ -430,7 +433,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
       test_fail_flag = True
 
     return test_fail_flag
-    
+
   @DEBUG
   def _CommandStreamer(self, cmd, args, time_out):
     """Run the run command with a timeout.
@@ -482,10 +485,18 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
               self.reporter.ExtraMessage('%s:\n\t%s\n' % (cmd, line))
               logger.warn('Caught one suspicous string: %s')
               break
-  
+
       logger.info('-----completed test %s %s with return code %s' % (cmd,
                                                                      args,
                                                                      ret))
+
+      # If file_errors is True, create a separate output file for each non zero
+      # return code.
+      if self.file_errors and ret <> 0:
+        test_cmd = cmd.split()[0]
+        testcase = os.path.basename(test_cmd)
+        path = os.path.join(global_settings['report_dir'], testcase) + '.out'
+        self.reporter.SendTestOutput(path, testcase, message)
     finally:
       self.filesystem.ChDir(current_path)
     return ret
@@ -498,7 +509,7 @@ class BaseRunner(pyreringutil.PyreRingFrameworkAdaptor):
       the instance's name
     """
     return self.name
-  
+
   @DEBUG
   def GetFrameworkType(self):
     """Return the framework type which is the command to invoke the framework.

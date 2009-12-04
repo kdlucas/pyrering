@@ -86,6 +86,8 @@ class PyreRingConfig(object):
               the actual value will be os.path.join(ed) with
               '<root_dir>/report'
               default name is pyrering.log
+    file_errors: a boolean value that turns on filing the output of each none
+                 passing testcase to a separate output file.
     reset: a boolean value user sets from the command line. If true, the run
            time configuration will replace existing configuration file. It has
            no effect in the conf file.
@@ -98,9 +100,9 @@ class PyreRingConfig(object):
 
   def _CreateConfig(self):
     """Create a config file based on user config plus default config.
-    
+
     This method should create a new config file using some runtime information.
-  
+
     Returns:
       None. The constructed info write to conf_file
     """
@@ -116,10 +118,10 @@ Creating a default configuration file.
 User can edit it later to change default values at: %s.
 ******************************************************
     """ % (self.settings['conf_file'], self.settings['conf_file'])
-    
+
   def _ReadConfig(self):
     """Convert the conf_file to a dictionary.
-  
+
     Returns:
       a dictionary with key value pairs from the conf file.
     """
@@ -147,10 +149,10 @@ User can edit it later to change default values at: %s.
     for key in NON_OVERWRITTEN_KEYS:
       settings.pop(key, None)
     return settings
-  
+
   def _AddDefaultConfig(self, pyrering_root):
     """Populate the settings dictionary with default values.
-    
+
     This method will provide a base configuration dictionary for PyreRing.
 
     Args:
@@ -173,6 +175,7 @@ User can edit it later to change default values at: %s.
         'sendmail': False,
         'email_recipients': getpass.getuser(),
         'log_file': 'pyrering.log',
+        'file_errors': False,
         'reset': False,
         'runner': 'baserunner',
         'FATAL_STRING': '',
@@ -186,7 +189,7 @@ User can edit it later to change default values at: %s.
 
   def Populate(self, pyrering_root, user_settings):
     """Populate settings dictionary.
-    
+
     If the conf file exist, it will use user settings update conf file
     settings and update default settings.
     If the conf file doesn't exist, it will user user settings update default

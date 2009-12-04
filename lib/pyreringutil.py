@@ -144,24 +144,31 @@ class PyreRingSuiteRunner(object):
     # This is the list of log or report types will be generated at report_dir.
     # It will be used to do archiving and also clean up previous leftover.
     self.report_types = ['.txt']
+    self.output_types = ['.out']
 
   @DEBUG
   def SetUp(self):
     """The method will try to setup the test environment.
-    
+
     Specifically, it will clean up the report directory for new reports and
     call the framework's Prepare method to let it prepare itself.
 
     Returns:
       None
     """
+    # This is the list of log or report types that will be generated at
+    # report_dir. It will be used to do archiving and also clean up previous
+    # leftover runs.
     report_dir = self.prop['report_dir']
+    host_name = self.prop['host_name']
     if not os.path.isdir(report_dir):
       os.makedirs(report_dir)
-    host_name = self.prop['host_name']
-    report_file_list = [os.path.join(report_dir, host_name + '*' + x)
-                        for x in self.report_types]
-    self.CleanFiles(report_file_list)
+    self.report_file_list = [os.path.join(report_dir, host_name + '*' + x)
+                             for x in self.report_types]
+    olist = [os.path.join(report_dir, '*' + x) for x in self.output_types]
+    self.report_file_list.extend(olist)
+    files_present = os.listdir(report_dir)
+    self.CleanFiles(self.report_file_list)
     self.framework.Prepare()
 
   @DEBUG
@@ -174,7 +181,7 @@ class PyreRingSuiteRunner(object):
 
   def _SetEnvironment(self):
     """Called by Run to set up environment variables.
-    
+
     there are some environment variables we need to pass on to the subshell
     which will be used to run the actual test scripts.
     1. the source_dir: this variable defines the root directory of the project
@@ -220,7 +227,7 @@ class PyreRingSuiteRunner(object):
 
   def _AttachEnvironmentPath(self, env_var, new_paths):
     """Attach new_path to the environment path variable.
-    
+
     This method is used to update path environment variables.
     It will append a list of paths to the given environment variable.
 
@@ -268,11 +275,8 @@ class PyreRingSuiteRunner(object):
     archive_name = os.path.join(self.prop['report_dir'], '%s_%s.tar.gz' %
                                 (self.prop['host_name'], self.prop['time']))
     keep_log = True
-    report_dir = self.prop['report_dir']
     host_name = self.prop['host_name']
-    report_file_list = [os.path.join(report_dir, host_name + '*' + x)
-                        for x in self.report_types]
-    self.TarReports(archive_name, report_file_list, keep_log)
+    self.TarReports(archive_name, self.report_file_list, keep_log)
     return failure_count
 
   @DEBUG

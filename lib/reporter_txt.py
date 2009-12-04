@@ -328,6 +328,23 @@ class TxtReporter(Reporter):
       self.report_pipe.flush()
     self.report_pipe.close()
 
+  def _WriteTestToFile(self, output_file, testcase, msg):
+    """Write test case output to a single file.
+
+    Args:
+      output_file: string, pathname of testcase output file.
+      testcase: string, testcase name.
+      msg: string, output from testcase.
+    Returns:
+      None.
+    """
+    self.report_pipe = open(output_file, 'w')
+    self.report_pipe.write(testcase)
+    self.report_pipe.write('\n\n')
+    self.report_pipe.write(msg)
+    self.report_pipe.flush()
+    self.report_pipe.close()
+
   def _SummaryTestToRecord(self):
     """Construct a test summary and send to pipe.
 
@@ -438,3 +455,17 @@ class TxtReporter(Reporter):
       None.
     """
     self._WriteToRecord(EXTRA, msg)
+
+  @DEBUG
+  def SendTestOutput(self, output_file, testcase, message):
+    """Send output from one testcase to a file.
+
+    Args:
+      output_file: string, pathname of file to write testcase output.
+      testcase: string, name of testcase.
+      message: string, output from testcase.
+
+    Returns:
+      None.
+    """
+    self._WriteTestToFile(output_file, testcase, message)
