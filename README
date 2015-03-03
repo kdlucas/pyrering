@@ -5,31 +5,6 @@ PyreRing is an test automation test runner. This program is protected under
 the Apache License, version 2.0. PyreRing is written in Python, and is Python
 2.4 compatible.
 
-This file contains  minimal documentation. Documentation is kept online at
-http://code.google.com. Please refer to the Usage Guide or Developer Guide for
-up-to-date documentation.
-
-For help using or developing on PyreRing:
-
-Project Home:       http://code.google.com/p/pyrering/
-User Guide:         http://code.google.com/p/pyrering/wiki/PyreRingUsage
-Developer Guide:    http://code.google.com/p/pyrering/wiki/PyreRingDev
-
-Download PyreRing:  http://code.google.com/p/pyrering/downloads/list
-Checkout Source:
-  svn checkout http://pyrering.googlecode.com/svn/trunk/ pyrering-read-only
-  svn checkout https://pyrering.googlecode.com/svn/trunk/ pyrering --username \
-    <username>
-Checkout Docs:
-  svn checkout http://pyrering.googlecode.com/svn/wiki/ wiki --username \
-    <username>
-Issues/Enhancement: http://code.google.com/p/pyrering/issues/list
-
-Discussion Groups:
-  Announcements: http://groups.google.com/group/pyrering-announce
-  Discussion:    http://groups.google.com/group/pyrering-discuss
-  Development:   http://groups.google.com/group/pyrering-dev
-
 Directory and Files Layout:
 ===========================
 __init__.py
